@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../contexts/authContext'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CinemaHall from '../cinema/CinemaHall'
 import dayjs from 'dayjs';
+import Swal from 'sweetalert2'
 
 import {
   Container,
@@ -27,14 +28,11 @@ import 'dayjs/locale/pt-br';
 
 const Checkout = () => {
   const { currentUser } = useAuth()
-
+  const navigate = useNavigate();
   const { id } = useParams();
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [movie, setMovie] = useState([]);
   const [pedidos, setPedidos] = useState([]);
-
-  const [hall, setHall] = useState('');
-  const [price, setPrice] = useState(0);
 
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -70,14 +68,61 @@ const Checkout = () => {
     }
   }
 
-  const handleReserve = () => {
-    // Lógica para reserva
-    alert('Reservado!');
+  const validateForm = () => {
+    if (!selectedSeat) {
+      alert("Selecione uma poltrona!")
+      return true;
+    }
+    if (!selectedOption) {
+      alert("Selecione uma sessão!")
+      return true;
+    }
+    if (!selectedDate) {
+      alert("Informe uma data!")
+      return true;
+    }
+  }
+
+  const handleReserve = async (usuario) => {
+    if (validateForm()) {
+      return
+    }
+    try {
+      const response = await axios.post(`http://localhost:8080/pedidos`, {
+        filme: movie.title,
+        usuario: usuario,
+        sessao: selectedOption,
+        preco: 39.90,
+        poltrona: selectedSeat,
+        status: "reservado",
+        date: selectedDate
+      });
+      alert(`Poltrona ${response.data.poltrona} Reservada!`);
+      navigate("/pedidos");
+    } catch (error) {
+      console.error('Erro ao realizar reserva:', error);
+    }
   };
 
-  const handleBuy = () => {
-    // Lógica para compra
-    alert('Comprado!');
+  const handleBuy = async (usuario) => {
+    if (validateForm()) {
+      return
+    }
+    try {
+      const response = await axios.post(`http://localhost:8080/pedidos`, {
+        filme: movie.title,
+        usuario: usuario,
+        sessao: selectedOption,
+        preco: 39.90,
+        poltrona: selectedSeat,
+        status: "pago",
+        date: selectedDate
+      });
+      alert(`Compra da poltrona ${response.data.poltrona} efetuada!`);
+      navigate("/pedidos");
+    } catch (error) {
+      console.error('Erro ao realizar compra:', error);
+    }
   };
 
   const handleOptionChange = async (event) => {
@@ -149,11 +194,11 @@ const Checkout = () => {
 
                   <Typography variant='h3' sx={{ alignSelf: "end" }}><strong>R$ 39,90</strong></Typography>
 
-                  <Button fullWidth variant="contained" color="secondary" onClick={handleReserve}>
+                  <Button fullWidth variant="contained" color="secondary" onClick={() => handleReserve(currentUser.email)}>
                     <strong>Reservar</strong>
                   </Button>
 
-                  <Button fullWidth variant="contained" color="primary" onClick={handleBuy}>
+                  <Button fullWidth variant="contained" color="primary" onClick={() => handleBuy(currentUser.email)}>
                     <strong>Comprar</strong>
                   </Button>
                 </Box>

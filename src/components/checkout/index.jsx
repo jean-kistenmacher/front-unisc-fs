@@ -56,7 +56,7 @@ const Checkout = () => {
 
   const fetchPedidoBySessao = async (sessao, date, title) => {
     try {
-      const response = await axios.post(`http://localhost:8080/pedidos/sessao`, {
+      const response = await axios.post(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/sessao`, {
         filme: title,
         sessao: sessao,
         date: date
@@ -87,7 +87,7 @@ const Checkout = () => {
       return
     }
     try {
-      const response = await axios.post(`http://localhost:8080/pedidos`, {
+      const response = await axios.post(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos`, {
         filme: movie.title,
         usuario: usuario,
         sessao: selectedOption,
@@ -108,7 +108,7 @@ const Checkout = () => {
       return
     }
     try {
-      const response = await axios.post(`http://localhost:8080/pedidos`, {
+      const response = await axios.post(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos`, {
         filme: movie.title,
         usuario: usuario,
         sessao: selectedOption,
@@ -118,7 +118,7 @@ const Checkout = () => {
         date: selectedDate
       });
       alert(`Gerando boleto poltrona ${response.data.poltrona}!`);
-      const responsePDF = await axios.get(`http://localhost:8080/pedidos/boleto/${response.data.id}`, { responseType: 'blob' });
+      const responsePDF = await axios.get(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/boleto/${response.data.id}`, { responseType: 'blob' });
       window.open(URL.createObjectURL(responsePDF.data));
       navigate("/pedidos");
     } catch (error) {

@@ -17,7 +17,7 @@ const PedidoItem = ({ pedido }) => {
 
   const handleCancel = async (idPedido) => {
     try {
-      await axios.delete(`http://localhost:8080/pedidos/${idPedido}`);
+      await axios.delete(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/${idPedido}`);
       alert(`Reserva cancelada!`);
       window.location.reload();
     } catch (error) {
@@ -27,11 +27,11 @@ const PedidoItem = ({ pedido }) => {
 
   const handlePay = async (idPedido) => {
     try {
-      const response = await axios.put(`http://localhost:8080/pedidos/${idPedido}`, {
+      const response = await axios.put(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/${idPedido}`, {
         status: "Pago"
       });
       alert(`Gerando boleto poltrona ${response.data.poltrona}!`);
-      const responsePDF = await axios.get(`http://localhost:8080/pedidos/boleto/${idPedido}`, { responseType: 'blob' });
+      const responsePDF = await axios.get(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/boleto/${idPedido}`, { responseType: 'blob' });
       window.open(URL.createObjectURL(responsePDF.data));
       window.location.reload();
     } catch (error) {
@@ -41,7 +41,7 @@ const PedidoItem = ({ pedido }) => {
 
   const handleGenerateDoc = async (idPedido) => {
     try {
-      const responsePDF = await axios.get(`http://localhost:8080/pedidos/comprovante/${idPedido}`, { responseType: 'blob' });
+      const responsePDF = await axios.get(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/comprovante/${idPedido}`, { responseType: 'blob' });
       window.open(URL.createObjectURL(responsePDF.data));
     } catch (error) {
       console.error('Erro ao gerar comprovante:', error);

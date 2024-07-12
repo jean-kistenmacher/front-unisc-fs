@@ -12,7 +12,7 @@ const Pedidos = () => {
   useEffect(() => {
     const fetchPedidosByUser = async (userMail) => {
       try {
-        const response = await axios.get(`http://localhost:8080/pedidos/usuario/${userMail}`);
+        const response = await axios.get(`https://back-unisc-fs-99044e004fb3.herokuapp.com/pedidos/usuario/${userMail}`);
         setPedidos(response.data);
         console.log(response.data)
       } catch (error) {

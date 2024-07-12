@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Button, Grid } from '@mui/material';
-import { loadStripe } from '@stripe/stripe-js';
-
 
 const PedidoItem = ({ pedido }) => {
 

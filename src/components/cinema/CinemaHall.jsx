@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import Seat from './Seat';
 
-const CinemaHall = ({ onSeatSelect }) => {
+const CinemaHall = ({ onSeatSelect, pedidos }) => {
   const [selectedSeat, setSelectedSeat] = useState(null);
 
   const handleSeatClick = (number) => {
@@ -10,17 +10,37 @@ const CinemaHall = ({ onSeatSelect }) => {
     onSeatSelect(number);
   };
 
-  const renderSeats = (start, end) => {
+  const renderSeats = (start, end, pedidos) => {
     const seats = [];
+    let poltronasOcupadas = [];
+    let ocupado = false;
+    let statusColor = "";
+    pedidos.map((pedido) => poltronasOcupadas.push({ status: pedido.status, poltrona: pedido.poltrona }));
+    console.log(poltronasOcupadas)
     for (let i = start; i <= end; i++) {
+      poltronasOcupadas.map((poltrona) => {
+        if (poltrona.poltrona === i) {
+          ocupado = true;
+          if (poltrona.status === "reservado") {
+            statusColor = "secondary.main"
+          }
+          if (poltrona.status === "pago") {
+            statusColor = "error.main"
+          }
+        }
+      })
       seats.push(
         <Seat
           key={i}
           number={i}
           isSelected={selectedSeat === i}
           onClick={handleSeatClick}
+          ocupado={ocupado}
+          statusColor={statusColor}
         />
       );
+      ocupado = false;
+      statusColor = "";
     }
     return seats;
   };
@@ -31,8 +51,8 @@ const CinemaHall = ({ onSeatSelect }) => {
         <strong>Tela</strong>
       </Typography>
       <Grid container spacing={10} justifyContent="center" alignItems="center">
-        <Grid xs={12} md={6} item>{renderSeats(1, 24)}</Grid>
-        <Grid xs={12} md={6} item>{renderSeats(31, 54)}</Grid>
+        <Grid xs={12} md={6} item>{renderSeats(1, 24, pedidos)}</Grid>
+        <Grid xs={12} md={6} item>{renderSeats(31, 54, pedidos)}</Grid>
       </Grid>
     </div>
   );

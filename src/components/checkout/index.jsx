@@ -30,6 +30,7 @@ const Checkout = () => {
   const { id } = useParams();
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [movie, setMovie] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
 
   const [hall, setHall] = useState('');
   const [price, setPrice] = useState(0);
@@ -51,9 +52,22 @@ const Checkout = () => {
         console.error('Erro ao buscar detalhes do filme:', error);
       }
     }
-
     fetchMovieById(id);
   }, [id]);
+
+
+  const fetchPedidoBySessao = async (sessao, date, title) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/pedidos/sessao`, {
+        filme: title,
+        sessao: sessao,
+        date: date
+      });
+      setPedidos(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do filme:', error);
+    }
+  }
 
   const handleReserve = () => {
     // Lógica para reserva
@@ -65,12 +79,20 @@ const Checkout = () => {
     alert('Comprado!');
   };
 
-  const handleOptionChange = (event) => {
+  const handleOptionChange = async (event) => {
     setSelectedOption(event.target.value);
+    if (selectedDate && event.target.value) {
+      fetchPedidoBySessao(event.target.value, selectedDate, movie.title);
+      console.log(pedidos)
+    }
   };
 
-  const handleDateChange = (newDate) => {
+  const handleDateChange = async (newDate) => {
     setSelectedDate(newDate);
+    if (selectedOption && newDate) {
+      fetchPedidoBySessao(selectedOption, newDate, movie.title);
+      console.log(pedidos)
+    }
   };
 
   return (
@@ -79,7 +101,7 @@ const Checkout = () => {
         <Grid container spacing={8}>
           <Grid item xs={12} md={8}>
             <Paper elevation={3}>
-              <CinemaHall onSeatSelect={setSelectedSeat} />
+              <CinemaHall onSeatSelect={setSelectedSeat} pedidos={pedidos} />
             </Paper>
           </Grid>
           {console.log(movie)}
@@ -101,9 +123,9 @@ const Checkout = () => {
                       label="Sessão"
                       onChange={handleOptionChange}
                     >
-                      <MenuItem value={10}>Sala 01 - 17:00h</MenuItem>
-                      <MenuItem value={20}>Sala 02 - 19:00h</MenuItem>
-                      <MenuItem value={30}>Sala 03 - 21:00h</MenuItem>
+                      <MenuItem value={"Sala 01 - 17:00h"}>Sala 01 - 17:00h</MenuItem>
+                      <MenuItem value={"Sala 02 - 19:00h"}>Sala 02 - 19:00h</MenuItem>
+                      <MenuItem value={"Sala 03 - 21:00h"}>Sala 03 - 21:00h</MenuItem>
                     </Select>
                   </FormControl>
 
@@ -120,11 +142,11 @@ const Checkout = () => {
 
                   <Typography variant='h3' sx={{ alignSelf: "end" }}><strong>R$ 39,90</strong></Typography>
 
-                  <Button fullWidth variant="contained" color="primary" onClick={handleReserve}>
+                  <Button fullWidth variant="contained" color="secondary" onClick={handleReserve}>
                     <strong>Reservar</strong>
                   </Button>
 
-                  <Button fullWidth variant="contained" color="secondary" onClick={handleBuy}>
+                  <Button fullWidth variant="contained" color="primary" onClick={handleBuy}>
                     <strong>Comprar</strong>
                   </Button>
                 </Box>

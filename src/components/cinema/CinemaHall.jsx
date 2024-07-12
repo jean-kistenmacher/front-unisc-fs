@@ -21,10 +21,10 @@ const CinemaHall = ({ onSeatSelect, pedidos }) => {
       poltronasOcupadas.map((poltrona) => {
         if (poltrona.poltrona === i) {
           ocupado = true;
-          if (poltrona.status === "reservado") {
+          if (poltrona.status === "Reservado") {
             statusColor = "secondary.main"
           }
-          if (poltrona.status === "pago") {
+          if (poltrona.status === "Pago") {
             statusColor = "error.main"
           }
         }

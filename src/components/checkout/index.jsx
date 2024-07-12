@@ -4,7 +4,6 @@ import { useAuth } from '../../contexts/authContext'
 import { useParams, useNavigate } from 'react-router-dom';
 import CinemaHall from '../cinema/CinemaHall'
 import dayjs from 'dayjs';
-import Swal from 'sweetalert2'
 
 import {
   Container,
@@ -94,7 +93,7 @@ const Checkout = () => {
         sessao: selectedOption,
         preco: 39.90,
         poltrona: selectedSeat,
-        status: "reservado",
+        status: "Reservado",
         date: selectedDate
       });
       alert(`Poltrona ${response.data.poltrona} Reservada!`);
@@ -115,10 +114,12 @@ const Checkout = () => {
         sessao: selectedOption,
         preco: 39.90,
         poltrona: selectedSeat,
-        status: "pago",
+        status: "Pago",
         date: selectedDate
       });
-      alert(`Compra da poltrona ${response.data.poltrona} efetuada!`);
+      alert(`Gerando boleto poltrona ${response.data.poltrona}!`);
+      const responsePDF = await axios.get(`http://localhost:8080/pedidos/boleto/${response.data.id}`, { responseType: 'blob' });
+      window.open(URL.createObjectURL(responsePDF.data));
       navigate("/pedidos");
     } catch (error) {
       console.error('Erro ao realizar compra:', error);

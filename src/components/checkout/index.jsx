@@ -19,6 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import SquareIcon from '@mui/icons-material/Square';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -103,6 +104,12 @@ const Checkout = () => {
             <Paper elevation={3}>
               <CinemaHall onSeatSelect={setSelectedSeat} pedidos={pedidos} />
             </Paper>
+            <Box sx={{ marginTop: "1rem" }}>
+              <Typography variant='h5' sx={{ marginBottom: "1rem" }}><strong>Legenda:</strong></Typography>
+              <Typography variant='h6'><SquareIcon color="secondary" /><strong>Reservado</strong></Typography>
+              <Typography variant='h6'><SquareIcon color="error" /><strong>Ocupado</strong></Typography>
+              <Typography variant='h6'><SquareIcon color="success" /><strong>Selecionado</strong></Typography>
+            </Box>
           </Grid>
           {console.log(movie)}
           {console.log(currentUser.email)}

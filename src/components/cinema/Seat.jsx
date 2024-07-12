@@ -25,7 +25,7 @@ const Seat = ({ number, isSelected, onClick, ocupado, statusColor }) => {
       {!ocupado &&
         <Button
           variant={isSelected ? 'contained' : 'outlined'}
-          color={isSelected ? 'primary' : 'secondary'}
+          color={isSelected ? 'success' : 'secondary'}
           onClick={() => onClick(number)}
           style={{ margin: 5, width: 50 }}
         >

@@ -19,7 +19,20 @@ const Register = () => {
         e.preventDefault()
         if (!isRegistering) {
             setIsRegistering(true)
-            await doCreateUserWithEmailAndPassword(email, password)
+            try {
+                await doCreateUserWithEmailAndPassword(email, password)
+            } catch (error) {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode)
+                setIsRegistering(false)
+                if (errorCode === 'auth/weak-password') {
+                    setErrorMessage('A senha deve possuir ao menos 6 caracteres')
+                }
+                if (errorCode === 'auth/email-already-in-use') {
+                    setErrorMessage('Email já está em uso')
+                }
+            }
         }
     }
 
